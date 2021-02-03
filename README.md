@@ -24,6 +24,8 @@ Dotenv.config();
 
 ## Prepare oAuth Client
 
+add in to `index.js` next code:
+
 ```javascript
 const ClientOAuth2 = require("client-oauth2");
 
@@ -35,6 +37,8 @@ const salesToolAuth = new ClientOAuth2({
 ```
 
 ## Get and manage access token
+
+add in to `index.js` next code:
 
 ```javascript
 let token = null;
@@ -54,6 +58,8 @@ async function getToken() {
 ```
 
 ## Create pass
+
+add in to `index.js` next code:
 
 ```javascript
 const createPass = async (templateID, name, points) => {
@@ -76,6 +82,8 @@ const createPass = async (templateID, name, points) => {
 
 ## Patch pass
 
+add in to `index.js` next code:
+
 ```javascript
 const patchPass = async (passId, points) => {
   const res = await fetch(`${process.env.BASE_URI}/v1/pass/${passId}`, {
@@ -93,6 +101,8 @@ const patchPass = async (passId, points) => {
 ```
 
 ## List pass by template
+
+add in to `index.js` next code:
 
 ```javascript
 const listPassByTemplate = async (templateId) => {
