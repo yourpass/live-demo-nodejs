@@ -1,10 +1,10 @@
 # Live demo
 
-## Parse system enviroments wit secrets
+## Parse system enviroments with config and secrets
 
 Create file `.env` with content:
 
-```(bash)
+```bash
 BASE_URI=https://api.yourpass.eu
 OAUTH_URI=https://api.yourpass.eu/oauth2/token
 OAUTH_CLIENT_ID=c36b6721-04d5-4dce-b1f2-4796d8fcc849
@@ -14,16 +14,17 @@ AUTH_PASSWORD=...
 TEMPLATE_ID=...
 ```
 
-To load configuration use `dotenv` module
+To Load  your configuration use `dotenv` module
 
-```(javascript)
+```javascript
 const Dotenv = require("dotenv");
+
 Dotenv.config();
 ```
 
-## Prepare oAuth Client
+## Prepare oAuth Client
 
-```(javascript)
+```javascript
 const ClientOAuth2 = require("client-oauth2");
 
 const salesToolAuth = new ClientOAuth2({
@@ -35,33 +36,36 @@ const salesToolAuth = new ClientOAuth2({
 
 ## Get and manage access token
 
-```(javascript)
+```javascript
 let token = null;
 async function getToken() {
-    if (token !== null && !token.expired()) {
-        return token;
-    }
+  if (token !== null && !token.expired()) {
+    return token;
+  }
 
-    const json = await salesToolAuth.owner.getToken(
-        process.env.AUTH_USER || "",
-        process.env.AUTH_PASSWORD || ""
-    );
+  const json = await salesToolAuth.owner.getToken(
+    process.env.AUTH_USER || "",
+    process.env.AUTH_PASSWORD || ""
+  );
 
-    token = json;
-    return json;
+  token = json;
+  return json;
 }
 ```
 
 ## Create pass
 
-```(javascript)
+```javascript
 const createPass = async (templateID, name, points) => {
   const res = await fetch(`${process.env.BASE_URI}/v1/pass`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${(await getToken()).accessToken}`,
     },
-    body: JSON.stringify({ templateId: templateID, dynamicData: { name, points } }),
+    body: JSON.stringify({
+      templateId: templateID,
+      dynamicData: { name, points },
+    }),
   });
   if (res.status === 201) {
     return await res.json();
@@ -72,7 +76,7 @@ const createPass = async (templateID, name, points) => {
 
 ## Patch pass
 
-```(javascript)
+```javascript
 const patchPass = async (passId, points) => {
   const res = await fetch(`${process.env.BASE_URI}/v1/pass/${passId}`, {
     method: "PATCH",
@@ -90,7 +94,7 @@ const patchPass = async (passId, points) => {
 
 ## List pass by template
 
-```(javascript)
+```javascript
 const listPassByTemplate = async (templateId) => {
   const url = `${process.env.BASE_URI}/v1/pass?where={"deletedAt":null,"templateId":{"$inUuid":["${templateId}"]}}&page=1&limit=100&order=desc&orderBy=updatedAt&suppressCount`;
   const res = await fetch(url, {
