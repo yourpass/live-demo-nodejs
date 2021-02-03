@@ -2,6 +2,20 @@
 
 ## Parse system enviroments wit secrets
 
+Create file `.env` with content:
+
+```(bash)
+BASE_URI=https://api.yourpass.eu
+OAUTH_URI=https://api.yourpass.eu/oauth2/token
+OAUTH_CLIENT_ID=c36b6721-04d5-4dce-b1f2-4796d8fcc849
+OAUTH_SECRET=
+AUTH_USER=...
+AUTH_PASSWORD=...
+TEMPLATE_ID=...
+```
+
+To load configuration use `dotenv` module
+
 ```(javascript)
 const Dotenv = require("dotenv");
 Dotenv.config();
@@ -74,12 +88,11 @@ const patchPass = async (passId, points) => {
 };
 ```
 
-## List pass by temlate
+## List pass by template
 
 ```(javascript)
 const listPassByTemplate = async (templateId) => {
   const url = `${process.env.BASE_URI}/v1/pass?where={"deletedAt":null,"templateId":{"$inUuid":["${templateId}"]}}&page=1&limit=100&order=desc&orderBy=updatedAt&suppressCount`;
-  console.log(url)
   const res = await fetch(url, {
     method: "GET",
     headers: {
