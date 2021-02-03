@@ -25,10 +25,27 @@ async function getToken() {
   token = json;
   return json;
 }
+const createPass = async (templateID, name, points) => {
+  const res = await fetch(`${process.env.BASE_URI}/v1/pass`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${(await getToken()).accessToken}`,
+    },
+    body: JSON.stringify({
+      templateId: templateID,
+      dynamicData: { name, points },
+    }),
+  });
+  if (res.status === 201) {
+    return await res.json();
+  }
+  throw new Error("Couldn't create pass");
+};
 
 async function run() {
-  console.log("get access token");
-  console.log((await getToken()).accessToken);
+  console.log("create pass");
+  const pass = await createPass(process.env.TEMPLATE_ID, "Some name", 5);
+  console.log(pass);
 }
 
 run();
